@@ -34,6 +34,12 @@ def convert_type(input_data):
             print("convert type failed...input_data is "+input_data)
             return null
 
+
+
+# 这两个函数分别用于特征提取的两个阶段：
+# feature_extract_stage1：读取原始样本文件，每行调用C++动态库libfe.so的fea_extract_stage1函数进行特征处理，结果写入中间样本文件。主要实现原始数据到中间特征的转换。
+# feature_extract_stage2：读取中间样本文件，每行调用fea_extract_stage2，结合稀疏特征字典，生成最终特征样本，写入最终样本文件。主要实现特征编号映射和最终格式输出。
+# 两者都通过ctypes调用C++特征处理逻辑，实现高效批量特征转换。
 def feature_extract_stage1(raw_sample_file, intermediate_sample_file):
     libfe = ctypes.cdll.LoadLibrary('./libfe.so')
     length = 81920
