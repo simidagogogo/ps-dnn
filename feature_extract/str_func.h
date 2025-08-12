@@ -20,7 +20,6 @@ vector<string> split(const string str, const string delimiter) {
     strs = strs.substr(pos + 1, strs.size());
     pos = strs.find(delimiter);
   }
-
   return res;
 }
 

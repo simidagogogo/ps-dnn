@@ -3,11 +3,12 @@
 
 pwd=$PWD
 echo $PWD
-
+#prepare
 #.0. Download taqbao ad ctr dataset from https://tianchi.aliyun.com/dataset/dataDetail?dataId=56 to ./sample/orig/
 mkdir ./sample/orig/
 if [ ! -f "./sample/orig/behavior_log.csv.tar.gz" ]; then
-echo "请从网址(https://tianchi.aliyun.com/dataset/dataDetail?dataId=56)下载四个文件到目录./sample/orig中"
+ echo "!!!原始样本文件不存在!!!"
+ echo "!!!请从网址(https://tianchi.aliyun.com/dataset/dataDetail?dataId=56)首先下载四个文件(behavior_log.csv.tar.gz, raw_sample.csv.tar.gz,ad_feature.csv.tar.gz, user_profile.csv.tar.gz)到目录./sample/orig中"
  exit 
 else
  echo "原始样本文件存在"
@@ -54,7 +55,7 @@ make
 cd $pwd/model/
 cd build
 mkdir logs/
-rm -fr CMake*
+rm -rf CMake*
 cmake ../
 make -j 10
 
