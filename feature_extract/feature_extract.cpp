@@ -352,6 +352,7 @@ string FeatureExtractor::FeatureExtractStage2(const string& intermediate_sample)
   return vector2str(final_sample, output_fea_group_delimiter);
 }
 
+// ./feature_extract 1 $version
 int fea_extract_stage1(char c_ini_file[], char c_raw_sample[], char* buf, int* len) {
   string raw_sample(c_raw_sample);
   string ini_file(c_ini_file);
@@ -369,6 +370,7 @@ int fea_extract_stage1(char c_ini_file[], char c_raw_sample[], char* buf, int* l
   return 0;
 }
 
+// ./feature_extract 2 $version
 int fea_extract_stage2(char c_ini_file[], char c_sparse_dict_file[],
   char c_intermediate_sample[], char* buf, int* len) {
   string intermediate_sample(c_intermediate_sample);

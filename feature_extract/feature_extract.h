@@ -78,8 +78,7 @@ public:
 // 封装C接口
 extern "C" {
   int fea_extract_stage1(char c_ini_file[], char c_raw_sample[], char* buf, int* len);
-  int fea_extract_stage2(char c_ini_file[], char c_sparse_dict_file[],
-    char c_intermediate_sample[], char* buf, int* len);
+  int fea_extract_stage2(char c_ini_file[], char c_sparse_dict_file[], char c_intermediate_sample[], char* buf, int* len);
 }
 
 #endif
