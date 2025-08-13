@@ -7,7 +7,7 @@ if [[ ! -f "./uncompress/behavior_log.csv" ]]; then
     # tar xvf ../orig/behavior_log.csv.tar.gz 
     # tar xvf ../orig/ad_feature.csv.tar.gz 
     # tar xvf ../orig/user_profile.csv.tar.gz
-    tar xvf ../orig/raw_sample.csv.tar.gz 
+    # tar xvf ../orig/raw_sample.csv.tar.gz 
     cd -
 fi
 

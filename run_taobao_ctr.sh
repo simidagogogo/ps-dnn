@@ -5,10 +5,10 @@ pwd=$PWD
 echo $PWD
 
 echo "=================== step0. Download taqbao ad ctr dataset ==================="
-if [[ ! -f "./sample/orig/behavior_log.csv.tar.gz" ]]; then
-    echo "./sample/orig/behavior_log.csv.tar.gz not exist!"
-    exit
-fi
+# if [[ ! -f "./sample/orig/behavior_log.csv.tar.gz" ]]; then
+    # echo "./sample/orig/behavior_log.csv.tar.gz not exist!"
+    # exit
+# fi
 
 echo "=================== step1. gen sample ==================="
 cd $pwd/sample
