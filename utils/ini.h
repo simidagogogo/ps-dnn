@@ -1,10 +1,8 @@
-/*
- * inicpp.h
- */
 
 #ifndef INICPP_H_
 #define INICPP_H_
 
+#include <string>
 #include <algorithm>
 #include <fstream>
 #include <istream>
@@ -12,6 +10,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
+
+using std::string;
 
 class IniField {
 private:

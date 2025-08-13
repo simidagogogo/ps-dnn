@@ -89,3 +89,6 @@ This command will start the whole prodedure of taobao ctr prediction model.
 整体而言，分布式训练相比于单机训练，在auc损失不大的情况下，换来了训练时间的大幅度下降。
 
 欢迎联系550941794@qq.com进行交流。
+
+
+https://ke.segmentfault.com/course/1650000042675954/section/1500000042675959

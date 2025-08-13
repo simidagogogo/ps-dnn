@@ -18,7 +18,7 @@ private:
   map<string, string> sample_fields;
   map<string, string> sparse_fea_dict_;
 
-  string input_conf_outer_delimiter = ",";
+  std::string input_conf_outer_delimiter = ",";
   string input_conf_inner_delimiter = "|";
   string input_conf_args_delimiter = "#";
 
@@ -81,4 +81,5 @@ extern "C" {
   int fea_extract_stage2(char c_ini_file[], char c_sparse_dict_file[],
     char c_intermediate_sample[], char* buf, int* len);
 }
+
 #endif

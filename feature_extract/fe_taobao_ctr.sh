@@ -36,7 +36,6 @@ else
 fi
 
 echo "Feature extract for "$version
-
 if [ ! -f "./data/final_sample_train_$version" ]; then
     python3 feature_extract.py $version $min_fea_freq
     if [ $? -eq 0 ];then
@@ -45,7 +44,5 @@ if [ ! -f "./data/final_sample_train_$version" ]; then
         "feature_extract failed"
         exit
     fi
-else
-    echo ""
 fi
 
