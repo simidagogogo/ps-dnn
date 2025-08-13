@@ -4,9 +4,7 @@ float FeatureExtractor::LogOperator(const string fea_name) {
   check_fea(fea_name);
 
   string orig_fea_value = sample_fields[fea_name];
-  if (orig_fea_value.empty()) {
-    return 0;
-  }
+  if (orig_fea_value.empty()) return 0;
   float res = log(stof(orig_fea_value) + 1.0);
   return res;
 }
@@ -15,9 +13,7 @@ float FeatureExtractor::SqrtOperator(const string fea_name) {
   check_fea(fea_name);
 
   string orig_fea_value = sample_fields[fea_name];
-  if (orig_fea_value.empty()) {
-    return 0;
-  }
+  if (orig_fea_value.empty()) return 0;
   float res = sqrt(stof(orig_fea_value) + 1.0);
   return res;
 }
@@ -26,7 +22,6 @@ string FeatureExtractor::DirectOperator(const string fea_name) {
   check_fea(fea_name);
 
   string orig_fea_value = sample_fields[fea_name];
-
   return orig_fea_value;
 }
 
@@ -34,9 +29,7 @@ string FeatureExtractor::BucketOperator(const string fea_name, string splits) {
   check_fea(fea_name);
 
   string orig_fea_value = sample_fields[fea_name];
-  if (orig_fea_value.empty()) {
-    return "-1";
-  }
+  if (orig_fea_value.empty()) return "-1";
   float orig_value = stof(orig_fea_value);
   vector<string> breaklines = split(splits, input_conf_inner_delimiter);
   if (breaklines.size() <= 0) {
@@ -52,9 +45,7 @@ string FeatureExtractor::BucketOperator(const string fea_name, string splits) {
       output = i;
       break;
     }
-
   }
-
   return to_string(output);
 }
 
@@ -86,19 +77,16 @@ string FeatureExtractor::CombineOperator(const string sub_fea_names, string sub_
       exit(1);
     }
   }
-
   return vector2str(sub_fea_values, output_fea_inner_delimiter);
 }
 
 string FeatureExtractor::GroupOperator(const string fea_name) {
   check_fea(fea_name);
+
   string orig_fea_value = sample_fields[fea_name];
-  if (orig_fea_value.empty()) {
-    return "";
-  }
+  if (orig_fea_value.empty()) return "";
 
   string res = replace_all_distinct(orig_fea_value, input_sample_inner_delimiter, output_fea_intermediate_delimiter);
-
   return res;
 }
 
@@ -117,35 +105,37 @@ string FeatureExtractor::HitOperator(const string sub_fea_names) {
   vector<string> second_fea_values = split(sample_fields[second_fea_name], input_sample_inner_delimiter);
 
   string res = "1";
-  if (find(second_fea_values.begin(), second_fea_values.end(), first_fea_value) == second_fea_values.end())
+  if (find(second_fea_values.begin(), second_fea_values.end(), first_fea_value) == second_fea_values.end()) {
     res = "0";
-
+  }
   return res;
 }
 
-int FeatureExtractor::ParseSample(const string input) {
+int FeatureExtractor::ParseSample(const string& input) {
   vector<string> eles = split(input, input_sample_outer_delimiter);
-  vector<string> fields = split(conf_["raw_sample_schema"]["fields"].as<std::string>(), input_conf_outer_delimiter);
+  vector<string> fields = split(conf["raw_sample_schema"]["fields"].as<std::string>(), input_conf_outer_delimiter);
+
   if (eles.size() != fields.size()) {
     cerr << "Error:The size of sample fields does't match the schema:" << input << endl;
-    cerr << conf_["raw_sample_schema"]["fields"].as<std::string>() << endl;
+    cerr << conf["raw_sample_schema"]["fields"].as<std::string>() << endl;
     cerr << eles.size() << " vs " << fields.size() << endl;
     exit(1);
   }
+
   for (int i = 0; i < eles.size(); ++i) {
     string field_name = fields[i];
     string field_value = eles[i];
     sample_fields[field_name] = field_value;
-    // cout << field_name << " : " << field_value << endl;
+    cout << field_name << " : " << field_value << endl;
   }
-
   return 0;
 }
+
 
 string FeatureExtractor::ExtractSingleFeaure(string fea_name, string fea_conf) {
   vector<string> fea_confs = split(fea_conf, input_conf_outer_delimiter);
   if (fea_confs.size() < 2) {
-    cerr << "Error:Fea conf needs incude sub fea and operator:" << fea_name << "\t" << fea_conf << endl;
+    cerr << "Error: Fea conf needs incude sub fea and operator:" << fea_name << "\t" << fea_conf << endl;
     exit(1);
   }
 
@@ -154,11 +144,11 @@ string FeatureExtractor::ExtractSingleFeaure(string fea_name, string fea_conf) {
   string fea_operator = fea_confs[1];
 
   string fea_value;
-  if (fea_operator == "log")
+  if (fea_operator == "log") {
     fea_value = to_string(LogOperator(orig_fea_names));
-  else if (fea_operator == "sqrt")
+  } else if (fea_operator == "sqrt") {
     fea_value = to_string(SqrtOperator(orig_fea_names));
-  else if (fea_operator == "direct") {
+  } else if (fea_operator == "direct") {
     fea_prefix = orig_fea_names;
     fea_value = DirectOperator(orig_fea_names);
   } else if (fea_operator == "bucket") {
@@ -177,9 +167,9 @@ string FeatureExtractor::ExtractSingleFeaure(string fea_name, string fea_conf) {
     if (fea_confs.size() >= 3)
       fea_prefix = fea_confs[2];
     fea_value = GroupOperator(orig_fea_names);
-  } else if (fea_operator == "hit")
+  } else if (fea_operator == "hit") {
     fea_value = HitOperator(orig_fea_names);
-  else {
+  } else {
     cerr << "unkown operator:" << fea_operator << endl;
     exit(1);
   }
@@ -190,8 +180,9 @@ string FeatureExtractor::ExtractSingleFeaure(string fea_name, string fea_conf) {
   //  fea_prefix = orig_sub_fea_names[0];
 
   //特征抽取为空
-  if (fea_value.size() == 0)
+  if (fea_value.size() == 0) {
     return fea_prefix + output_fea_inner_delimiter + fea_value;
+  }
 
   vector<string> sub_fea_values = split(fea_value, output_fea_intermediate_delimiter);
   vector<string> sub_fea_values_with_name;
@@ -208,13 +199,13 @@ string FeatureExtractor::ExtractSingleFeaure(string fea_name, string fea_conf) {
 string FeatureExtractor::ExtractGroupFeaure(string fea_group_name) {
   vector<string> fea_values;
   std::map<std::string, IniField>::iterator iter;
-  int fea_counts = conf_[fea_group_name].size();
+  int fea_counts = conf[fea_group_name].size();
   if (fea_counts <= 0) {
     //cout << fea_group_name << " has no features" << endl;
     return "";
   }
 
-  for (iter = conf_[fea_group_name].begin(); iter != conf_[fea_group_name].end(); iter++) {
+  for (iter = conf[fea_group_name].begin(); iter != conf[fea_group_name].end(); iter++) {
     string fea_name = iter->first;
     string fea_conf = (iter->second).as<std::string>();
     fea_values.push_back(ExtractSingleFeaure(fea_name, fea_conf));
@@ -263,8 +254,8 @@ string FeatureExtractor::FeatureExtractStage1(const string& raw_sample) {
   vector<string> intermediate_sample;
 
   ParseSample(raw_sample);
-  string id = ExtractSingleFeaure("id", conf_["id"]["id"].as<std::string>());
-  string label = ExtractSingleFeaure("label", conf_["label"]["label"].as<std::string>());
+  string id = ExtractSingleFeaure("id", conf["id"]["id"].as<std::string>());
+  string label = ExtractSingleFeaure("label", conf["label"]["label"].as<std::string>());
 
   intermediate_sample.push_back(id);
   intermediate_sample.push_back(label);
@@ -354,11 +345,12 @@ string FeatureExtractor::FeatureExtractStage2(const string& intermediate_sample)
 
 // ./feature_extract 1 $version
 int fea_extract_stage1(char c_ini_file[], char c_raw_sample[], char* buf, int* len) {
-  string raw_sample(c_raw_sample);
   string ini_file(c_ini_file);
+  string raw_sample(c_raw_sample);
 
   static FeatureExtractor fe(ini_file);
   string fea_value_sample = fe.FeatureExtractStage1(raw_sample);
+
   if (fea_value_sample.length() > 81920) {
     cerr << "Error: fea_value_sample length is bigger than 80KB" << endl;
     cerr << fea_value_sample << endl;
@@ -392,55 +384,61 @@ int fea_extract_stage2(char c_ini_file[], char c_sparse_dict_file[],
   return 0;
 }
 
+
 int main(int argc, char* argv[]) {
   for (int i = 0; i < argc; i++) {
     cout << "argument[" << i << "] is: " << argv[i] << endl;
   }
-
   int phrase = atoi(argv[1]);
   string version = argv[2];
   string fea_conf = "../conf/features_" + version + ".ini";
   cout << "fea_conf:" << fea_conf << endl;
+
   if (phrase == 1) {
     FeatureExtractor fe(fea_conf);
 
-    ifstream inf;
-    inf.open("./data/demo");
+    std::ifstream ifstream;
+    ifstream.open("./data/demo");
 
-    ofstream outf;
-    outf.open("./data/demo_out_stage1");
+    std::ofstream ofstream;
+    ofstream.open("./data/demo_out_stage1");
 
-    string sample;
-    while (getline(inf, sample)) {
+    std::string sample;
+    while (getline(ifstream, sample)) {
       cout << "raw sample:\t" << sample << endl;
+
       string res = fe.FeatureExtractStage1(sample);
       cout << "intermediate fea_extracted:\t" << res << endl;
-      outf << res << endl;
+      ofstream << res << endl;
     }
 
-    inf.close();
-    outf.close();
-  } else if (phrase == 2) {
+    ifstream.close();
+    ofstream.close();
+    return 0;
+  }
+
+  if (phrase == 2) {
     FeatureExtractor fe(fea_conf, "./data/fea_dict_index");
 
-    ifstream inf;
-    inf.open("./data/demo_out_stage1");
+    std::ifstream ifstream;
+    ifstream.open("./data/demo_out_stage1");
 
-    ofstream outf;
-    outf.open("./data/demo_out_stage2");
+    std::ofstream ofstream;
+    ofstream.open("./data/demo_out_stage2");
 
     string sample;
-    while (getline(inf, sample)) {
+    while (getline(ifstream, sample)) {
       cout << "intermediate sample:\t" << sample << endl;
+
       string res = fe.FeatureExtractStage2(sample);
       cout << "final fea_extracted:\t" << res << endl;
-      outf << res << endl;
-
+      ofstream << res << endl;
     }
-    inf.close();
-    outf.close();
-  } else {
-    cerr << "unknown order" << endl;
+    ifstream.close();
+    ofstream.close();
+    return 0;
   }
+
+  cerr << "unknown order" << endl;
   return 0;
 }

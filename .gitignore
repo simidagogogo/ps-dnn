@@ -3,3 +3,6 @@
 # sample/uncompress/
 sample/final_data/
 .DS_Store
+feature_extract/log
+feature_extract/libfe.so
+feature_extract/data/
